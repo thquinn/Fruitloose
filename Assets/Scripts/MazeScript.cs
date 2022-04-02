@@ -1,15 +1,23 @@
 using Assets.Code;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MazeScript : MonoBehaviour {
-    public GameObject prefabTile, prefabWall, prefabGel;
+    public GameObject prefabTile, prefabWall, prefabGel, prefabArrow, prefabGelPath;
+    public LayerMask layerMaskWall, layerMaskArrow;
 
     Maze maze;
+    GelScript gelScript;
+    Dictionary<Collider, Wall> wallColliders;
+    Wall selectedWall;
+    Dictionary<Collider, Int2> wallMoveColliders;
+    Tuple<Wall, Int2> undo;
+    bool waitForAnimation;
 
     void Start() {
-        maze = new Maze(new Int2(8, 8));
+        maze = new Maze(new Int2(5, 5));
         float xOffset = -maze.dimensions.x / 2f + .5f;
         float yOffset = -maze.dimensions.y / 2f + .5f;
         // Floor.
@@ -20,13 +28,18 @@ public class MazeScript : MonoBehaviour {
             }
         }
         // Gel.
-        Instantiate(prefabGel, transform).GetComponent<GelScript>().Set(maze.gel);
+        gelScript = Instantiate(prefabGel, transform).GetComponent<GelScript>();
+        gelScript.Set(maze.gel);
+        Instantiate(prefabGelPath, transform).GetComponent<GelPathScript>().Set(maze.gel);
         // Walls.
+        wallColliders = new Dictionary<Collider, Wall>();
         for (int x = 0; x < maze.wallsRight.GetLength(0); x++) {
             for (int y = 0; y < maze.wallsRight.GetLength(1); y++) {
                 Wall wall = maze.wallsRight[x, y];
                 if (wall != null) {
-                    Instantiate(prefabWall, transform).GetComponent<WallScript>().Set(wall);
+                    GameObject wallObject = Instantiate(prefabWall, transform);
+                    wallObject.GetComponent<WallScript>().Set(wall);
+                    wallColliders[wallObject.GetComponentInChildren<Collider>()] = wall;
                 }
             }
         }
@@ -34,16 +47,73 @@ public class MazeScript : MonoBehaviour {
             for (int y = 0; y < maze.wallsBelow.GetLength(1); y++) {
                 Wall wall = maze.wallsBelow[x, y];
                 if (wall != null) {
-                    Instantiate(prefabWall, transform).GetComponent<WallScript>().Set(wall);
+                    GameObject wallObject = Instantiate(prefabWall, transform);
+                    wallObject.GetComponent<WallScript>().Set(wall);
+                    wallColliders[wallObject.GetComponentInChildren<Collider>()] = wall;
                 }
             }
         }
+        // Other.
+        wallMoveColliders = new Dictionary<Collider, Int2>();
     }
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            maze.MoveEntity(maze.gel, maze.gel.path[0]);
+            waitForAnimation = true;
+        }
+        if (waitForAnimation) {
+            if (gelScript.DoneAnimating() && maze.MoveGel()) {
+                waitForAnimation = false;
+            }
+            return;
+        }
+        UpdateMoveSelection();
+    }
+    void UpdateMoveSelection() {
+        if (!Input.GetMouseButtonDown(0)) {
+            return;
+        }
+        // Arrow selection.
+        Int2 nullMove = new Int2(-1, -1);
+        Int2 selectedWallMove = wallMoveColliders.GetOrDefault(Util.GetMouseCollider(layerMaskArrow), nullMove);
+        if (selectedWallMove != nullMove) {
+            maze.MoveWall(selectedWall, selectedWallMove);
+            undo = new Tuple<Wall, Int2>(selectedWall, selectedWallMove);
             maze.gel.CalculatePath();
+            selectedWall = null;
+            DestroyAllArrows();
+            return;
+        }
+        // Wall selection.
+        Wall clickedWall = wallColliders.GetOrDefault(Util.GetMouseCollider(layerMaskWall));
+        if (clickedWall != selectedWall) {
+            selectedWall = clickedWall;
+            DestroyAllArrows();
+            CreateArrowsForSelectedWall();
+        }
+    }
+    void DestroyAllArrows() {
+        foreach (Collider collider in wallMoveColliders.Keys) {
+            Destroy(collider.transform.parent.gameObject);
+        }
+        wallMoveColliders.Clear();
+    }
+    void CreateArrowsForSelectedWall() {
+        if (selectedWall == null) {
+            return;
+        }
+        float xOffset = -maze.dimensions.x / 2f + .5f + (selectedWall.horizontal ? 0 : .5f);
+        float yOffset = -maze.dimensions.y / 2f + .5f + (selectedWall.horizontal ? .5f : 0);
+        List<Int2> wallMoves = maze.GetWallMoves(selectedWall);
+        foreach (Int2 wallMove in wallMoves) {
+            GameObject arrowObject = Instantiate(prefabArrow, transform);
+            arrowObject.transform.localPosition = new Vector3(wallMove.x + xOffset, 0, -wallMove.y - yOffset);
+            if (selectedWall.horizontal) {
+                arrowObject.transform.localRotation = Quaternion.Euler(0, wallMove.x < selectedWall.coor.x ? -90 : 90, 0);
+            } else {
+                arrowObject.transform.localRotation = Quaternion.Euler(0, wallMove.y < selectedWall.coor.y ? 0 : 180, 0);
+            }
+            wallMoveColliders[arrowObject.GetComponentInChildren<Collider>()] = wallMove;
         }
     }
 }

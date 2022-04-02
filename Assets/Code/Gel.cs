@@ -35,6 +35,9 @@ namespace Assets.Code {
                     break;
                 }
             }
+            if (!parents.ContainsKey(maze.exit)) {
+                return;
+            }
             Int2 c = maze.exit;
             while (c != coor) {
                 path.Add(c);

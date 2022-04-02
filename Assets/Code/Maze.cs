@@ -12,6 +12,8 @@ namespace Assets.Code {
         public Gel gel;
         public Wall[,] wallsRight, wallsBelow;
         public Int2 exit;
+        public int tilesPerMove;
+        public int tilesLeftThisMove;
 
         public Maze(Int2 dimensions) {
             this.dimensions = dimensions;
@@ -22,6 +24,8 @@ namespace Assets.Code {
             exit = new Int2(dimensions.x - 1, dimensions.y - 1);
             gel = new Gel(this, new Int2(0, 0));
             entities[0, 0] = gel;
+            tilesPerMove = 1;
+            tilesLeftThisMove = tilesPerMove;
         }
 
         public void RandomWalls() {
@@ -87,11 +91,61 @@ namespace Assets.Code {
             return neighbors;
         }
 
-        public void MoveEntity(Entity entity, Int2 coor) {
+        public bool MoveGel() {
+            MoveEntity(gel, gel.path[0]);
+            gel.CalculatePath();
+            tilesLeftThisMove--;
+            if (tilesLeftThisMove == 0) {
+                tilesPerMove++;
+                tilesLeftThisMove = tilesPerMove;
+                return true;
+            }
+            return false;
+        }
+        void MoveEntity(Entity entity, Int2 coor) {
             Debug.Assert(entities[coor.x, coor.y] == null);
             entities[entity.coor.x, entity.coor.y] = null;
             entities[coor.x, coor.y] = entity;
             entity.coor = coor;
+        }
+
+        public List<Int2> GetWallMoves(Wall wall) {
+            List<Int2> wallMoves = new List<Int2>();
+            Wall[,] walls = wall.horizontal ? wallsBelow : wallsRight;
+            Int2 coor = wall.coor;
+            coor += wall.horizontal ? new Int2(-1, 0) : new Int2(0, -1);
+            while (coor.x >= 0 && coor.y >= 0 && walls[coor.x, coor.y] == null) {
+                // Check for double walls blocking the way.
+                if (wall.horizontal && wallsRight[coor.x, coor.y] != null && wallsRight[coor.x, coor.y + 1] != null) {
+                    break;
+                }
+                if (!wall.horizontal && wallsBelow[coor.x, coor.y] != null && wallsBelow[coor.x + 1, coor.y] != null) {
+                    break;
+                }
+                wallMoves.Add(coor);
+                coor += wall.horizontal ? new Int2(-1, 0) : new Int2(0, -1);
+            }
+            coor = wall.coor;
+            coor += wall.horizontal ? new Int2(1, 0) : new Int2(0, 1);
+            while (coor.x < walls.GetLength(0) && coor.y < walls.GetLength(1) && walls[coor.x, coor.y] == null) {
+                // Check for double walls blocking the way.
+                if (wall.horizontal && wallsRight[coor.x - 1, coor.y] != null && wallsRight[coor.x - 1, coor.y + 1] != null) {
+                    break;
+                }
+                if (!wall.horizontal && wallsBelow[coor.x, coor.y - 1] != null && wallsBelow[coor.x + 1, coor.y - 1] != null) {
+                    break;
+                }
+                wallMoves.Add(coor);
+                coor += wall.horizontal ? new Int2(1, 0) : new Int2(0, 1);
+            }
+            return wallMoves;
+        }
+        public void MoveWall(Wall wall, Int2 coor) {
+            Wall[,] walls = wall.horizontal ? wallsBelow : wallsRight;
+            Debug.Assert(walls[coor.x, coor.y] == null);
+            walls[wall.coor.x, wall.coor.y] = null;
+            walls[coor.x, coor.y] = wall;
+            wall.coor = coor;
         }
     }
 }
