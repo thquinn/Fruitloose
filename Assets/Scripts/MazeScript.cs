@@ -78,8 +78,11 @@ public class MazeScript : MonoBehaviour {
 
     void Update() {
         if (waitForAnimation) {
-            if (gelScript.DoneAnimating() && maze.MoveGel()) {
-                waitForAnimation = false;
+            if (gelScript.DoneAnimating()) {
+                SFXScript.instance.Move();
+                if (maze.MoveGel()) {
+                    waitForAnimation = false;
+                }
             }
             if (fruitScript != null && maze.gel.coor == maze.exit) {
                 fruitScript.Eat();

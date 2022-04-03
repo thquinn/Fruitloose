@@ -32,6 +32,19 @@ namespace Assets.Code {
         }
     }
 
+    public static class ArrayExtensions {
+        public static T[] Shuffle<T>(this T[] array) {
+            int n = array.Length;
+            for (int i = 0; i < n; i++) {
+                int r = i + UnityEngine.Random.Range(0, n - i);
+                T t = array[r];
+                array[r] = array[i];
+                array[i] = t;
+            }
+            return array;
+        }
+    }
+
     public static class DictionaryExtensions {
         public static TV GetOrDefault<TK, TV>(this IDictionary<TK, TV> dict, TK key, TV defaultValue = default(TV)) {
             if (key == null) {
