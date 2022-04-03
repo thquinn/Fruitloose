@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MazeScript : MonoBehaviour {
-    public GameObject prefabTile, prefabWall, prefabGel, prefabArrow, prefabGelPath, prefabFruit;
+    public GameObject prefabTerrain, prefabTile, prefabWall, prefabGel, prefabArrow, prefabGelPath, prefabFruit;
     public LayerMask layerMaskWall, layerMaskArrow;
 
     Maze maze;
@@ -19,6 +19,8 @@ public class MazeScript : MonoBehaviour {
 
     void Start() {
         maze = new Maze(new Int2(5, 5));
+        TerrainScript terrainScript = Instantiate(prefabTerrain).GetComponent<TerrainScript>();
+        terrainScript.SpawnGrass(maze.entities.GetLength(0), maze.entities.GetLength(1));
         float xOffset = -maze.dimensions.x / 2f + .5f;
         float yOffset = -maze.dimensions.y / 2f + .5f;
         // Floor.

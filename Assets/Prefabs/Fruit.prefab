@@ -4939,7 +4939,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshRoot: {fileID: 6047723780928825560}
-  particleSystem: {fileID: 1083629424849784945}
+  particles: {fileID: 1083629424849784945}
 --- !u!1001 &1792933257237640054
 PrefabInstance:
   m_ObjectHideFlags: 0

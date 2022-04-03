@@ -16,24 +16,24 @@ public class GelScript : MonoBehaviour {
     }
 
     void Update() {
-        float positionT = firstUpdate ? 1 : .03f;
-        float rotationT = firstUpdate ? 1 : .05f;
+        float positionSmoothing = firstUpdate ? 0 : .0001f;
+        float rotationSmoothing = firstUpdate ? 0 : .00015f;
         firstUpdate = false;
         float targetX = gel.coor.x - gel.maze.dimensions.x / 2f + .5f;
         float targetZ = -gel.coor.y + gel.maze.dimensions.y / 2f - .5f;
         Vector2 localPosition2 = new Vector2(transform.localPosition.x, transform.localPosition.z);
-        Vector3 targetPosition2 = new Vector2(targetX, targetZ);
-        localPosition2 = Vector2.Lerp(localPosition2, targetPosition2, positionT);
+        Vector2 targetPosition2 = new Vector2(targetX, targetZ);
+        localPosition2 = Util.Damp(localPosition2, targetPosition2, positionSmoothing, Time.deltaTime);
         float distance2 = Vector2.Distance(localPosition2, targetPosition2);
         float height = 1 - Mathf.Abs(2 * (distance2 - .5f));
-        float scale = 1 + .1f * Mathf.Sin((1 - Mathf.Pow(distance2, .4f)) * 2 * Mathf.PI);
+        float scale = 1 + .05f * Mathf.Sin((1 - Mathf.Pow(distance2, .4f)) * 2 * Mathf.PI);
         transform.localScale = new Vector3(1, scale, 1);
         height *= .2f;
         transform.localPosition = new Vector3(localPosition2.x, height, localPosition2.y);
         if (distance2 < .1f) {
             UpdateTargetRotation();
         }
-        transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRotation, rotationT);
+        transform.localRotation = Util.Damp(transform.localRotation, targetRotation, rotationSmoothing, Time.deltaTime);
         doneAnimating = distance2 < .01f && Quaternion.Angle(transform.localRotation, targetRotation) < 5;
     }
     void UpdateTargetRotation() {

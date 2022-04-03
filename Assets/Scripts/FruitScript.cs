@@ -5,7 +5,7 @@ using UnityEngine;
 public class FruitScript : MonoBehaviour
 {
     public GameObject meshRoot;
-    public ParticleSystem particleSystem;
+    public ParticleSystem particles;
 
     void Update()
     {
@@ -18,8 +18,10 @@ public class FruitScript : MonoBehaviour
     }
 
     public void Eat() {
-        particleSystem.transform.parent = transform.parent;
-        particleSystem.Play();
+        particles.transform.parent = transform.parent;
+        particles.Play();
         Destroy(gameObject);
+        Destroy(particles, 2f);
+        SFXScript.instance.Chomp();
     }
 }

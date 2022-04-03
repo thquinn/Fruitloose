@@ -18,7 +18,7 @@ public class CameraScript : MonoBehaviour
         if (Input.GetMouseButton(1)) {
             horizontalAngle -= Input.GetAxis("Mouse X") * sensitivity;
             verticalAngle -= Input.GetAxis("Mouse Y") * sensitivity;
-            verticalAngle = Mathf.Clamp(verticalAngle, Mathf.PI * .1f, Mathf.PI * .49f);
+            verticalAngle = Mathf.Clamp(verticalAngle, Mathf.PI * .1f, Mathf.PI * .3f);
         }
 
         // Set position.
