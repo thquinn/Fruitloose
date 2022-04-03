@@ -14,10 +14,11 @@ namespace Assets.Code {
             this.maze = maze;
             this.coor = coor;
             this.type = type;
+            maze.entities[coor.x, coor.y] = this;
         }
     }
 
     public enum EntityType {
-        Gel
+        Gel, GoldenFruit
     }
 }

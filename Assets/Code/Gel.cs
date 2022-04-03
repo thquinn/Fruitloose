@@ -22,6 +22,7 @@ namespace Assets.Code {
             parents.Add(coor, new Int2(-1, -1));
             Queue<Int2> queue = new Queue<Int2>();
             queue.Enqueue(coor);
+            Entity overrideGoal = null;
             while (queue.Count > 0) {
                 Int2 current = queue.Dequeue();
                 foreach (Int2 neighbor in maze.GetNeighbors(current)) {
@@ -31,14 +32,18 @@ namespace Assets.Code {
                     parents[neighbor] = current;
                     queue.Enqueue(neighbor);
                 }
-                if (parents.ContainsKey(maze.exit)) {
-                    break;
+                if (overrideGoal == null) {
+                    Entity entity = maze.entities[current.x, current.y];
+                    if (entity != null && entity.type == EntityType.GoldenFruit) {
+                        overrideGoal = entity;
+                    }
                 }
             }
-            if (!parents.ContainsKey(maze.exit)) {
+            Int2 goalCoor = overrideGoal != null ? overrideGoal.coor : maze.exit;
+            if (!parents.ContainsKey(goalCoor)) {
                 return;
             }
-            Int2 c = maze.exit;
+            Int2 c = goalCoor;
             while (c != coor) {
                 path.Add(c);
                 c = parents[c];

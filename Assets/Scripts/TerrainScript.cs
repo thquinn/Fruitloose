@@ -1,3 +1,4 @@
+using Assets.Code;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,12 +9,14 @@ public class TerrainScript : MonoBehaviour
     public Collider terrainCollider;
     public LayerMask layerMaskTerrain;
 
-    public void SpawnGrass(float mazeWidth, float mazeHeight) {
-        mazeWidth += .4f;
-        mazeHeight += .4f;
+    public void Init(Maze maze) {
+        //transform.localScale = new Vector3(maze.entities.GetLength(0) / 5f, 0, maze.entities.GetLength(1) / 5f);
+        float mazeWidth = maze.entities.GetLength(0) + .4f;
+        float mazeHeight = maze.entities.GetLength(1) + .4f;
         Rect mazeBounds = new Rect(-mazeWidth / 2, -mazeHeight / 2, mazeWidth, mazeHeight);
         float rayY = terrainCollider.bounds.max.y;
-        for (int i = 0; i < 1000; i++) {
+        int grassCount = Mathf.RoundToInt(terrainCollider.bounds.size.x * terrainCollider.bounds.size.z - mazeWidth * mazeHeight);
+        for (int i = 0; i < grassCount; i++) {
             float rayX = Random.Range(terrainCollider.bounds.min.x, terrainCollider.bounds.max.x);
             float rayZ = Random.Range(terrainCollider.bounds.min.z, terrainCollider.bounds.max.z);
             if (mazeBounds.Contains(new Vector2(rayX, rayZ))) {

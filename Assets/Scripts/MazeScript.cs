@@ -20,7 +20,7 @@ public class MazeScript : MonoBehaviour {
     void Start() {
         maze = new Maze(new Int2(5, 5));
         TerrainScript terrainScript = Instantiate(prefabTerrain).GetComponent<TerrainScript>();
-        terrainScript.SpawnGrass(maze.entities.GetLength(0), maze.entities.GetLength(1));
+        terrainScript.Init(maze);
         float xOffset = -maze.dimensions.x / 2f + .5f;
         float yOffset = -maze.dimensions.y / 2f + .5f;
         // Floor.
@@ -37,6 +37,20 @@ public class MazeScript : MonoBehaviour {
         // Fruit.
         fruitScript = Instantiate(prefabFruit, transform).GetComponent<FruitScript>();
         fruitScript.transform.localPosition = new Vector3(maze.exit.x + xOffset, 0, -maze.exit.y - yOffset);
+        // Other entities.
+        for (int x = 0; x < maze.dimensions.x; x++) {
+            for (int y = 0; y < maze.dimensions.y; y++) {
+                Entity entity = maze.entities[x, y];
+                if (entity == null) {
+                    continue;
+                }
+                if (entity.type == EntityType.GoldenFruit) {
+                    FruitScript goldenFruit = Instantiate(prefabFruit, transform).GetComponent<FruitScript>();
+                    goldenFruit.Set(entity as GoldenFruit);
+                    goldenFruit.transform.localPosition = new Vector3(x + xOffset, 0, -y - yOffset);
+                }
+            }
+        }
         // Walls.
         wallColliders = new Dictionary<Collider, Wall>();
         for (int x = 0; x < maze.wallsRight.GetLength(0); x++) {

@@ -14,6 +14,7 @@ namespace Assets.Code {
         public Int2 exit;
         public int tilesPerMove;
         public int tilesLeftThisMove;
+        public int totalTiles;
 
         public Maze(Int2 dimensions) {
             this.dimensions = dimensions;
@@ -22,8 +23,8 @@ namespace Assets.Code {
             wallsBelow = new Wall[dimensions.x, dimensions.y - 1];
             RandomWalls();
             exit = new Int2(dimensions.x - 1, dimensions.y - 1);
+            new GoldenFruit(this, new Int2(2, 2));
             gel = new Gel(this, new Int2(0, 0));
-            entities[0, 0] = gel;
             tilesPerMove = 1;
             tilesLeftThisMove = tilesPerMove;
         }
@@ -93,8 +94,9 @@ namespace Assets.Code {
 
         public bool MoveGel() {
             MoveEntity(gel, gel.path[0]);
+            totalTiles++;
             gel.CalculatePath();
-            if (gel.path.Count == 0) {
+            if (gel.coor == exit) {
                 tilesLeftThisMove = 0;
                 return true;
             }
@@ -107,10 +109,19 @@ namespace Assets.Code {
             return false;
         }
         void MoveEntity(Entity entity, Int2 coor) {
+            Entity occupyingEntity = entities[coor.x, coor.y];
+            if (occupyingEntity != null && entity.type == EntityType.Gel && occupyingEntity.type == EntityType.GoldenFruit) {
+                DestroyEntity(occupyingEntity);
+                tilesLeftThisMove = 1;
+            }
             Debug.Assert(entities[coor.x, coor.y] == null);
             entities[entity.coor.x, entity.coor.y] = null;
             entities[coor.x, coor.y] = entity;
             entity.coor = coor;
+        }
+        void DestroyEntity(Entity entity) {
+            entity.maze = null;
+            entities[entity.coor.x, entity.coor.y] = null;
         }
 
         public List<Int2> GetWallMoves(Wall wall) {
