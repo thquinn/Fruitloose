@@ -8,13 +8,13 @@ public class MazeScript : MonoBehaviour {
     public GameObject prefabTerrain, prefabTile, prefabWall, prefabGel, prefabArrow, prefabGelPath, prefabFruit;
     public LayerMask layerMaskWall, layerMaskArrow;
 
-    Maze maze;
+    public Maze maze;
     GelScript gelScript;
     FruitScript fruitScript;
     Dictionary<Collider, Wall> wallColliders;
     Wall selectedWall;
     Dictionary<Collider, Int2> wallMoveColliders;
-    Tuple<Wall, Int2> undo;
+    public Move undo;
     bool waitForAnimation;
 
     void Start() {
@@ -63,10 +63,20 @@ public class MazeScript : MonoBehaviour {
         wallMoveColliders = new Dictionary<Collider, Int2>();
     }
 
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            waitForAnimation = true;
+    public void ConfirmMove() {
+        undo = null;
+        waitForAnimation = true;
+    }
+    public void UndoMove() {
+        if (undo == null) {
+            return;
         }
+        undo.Reverse(maze);
+        maze.gel.CalculatePath();
+        undo = null;
+    }
+
+    void Update() {
         if (waitForAnimation) {
             if (gelScript.DoneAnimating() && maze.MoveGel()) {
                 waitForAnimation = false;
@@ -83,12 +93,18 @@ public class MazeScript : MonoBehaviour {
         if (!Input.GetMouseButtonDown(0)) {
             return;
         }
+        if (undo != null) {
+            return;
+        }
+        if (maze.gel.coor == maze.exit) {
+            return;
+        }
         // Arrow selection.
         Int2 nullMove = new Int2(-1, -1);
         Int2 selectedWallMove = wallMoveColliders.GetOrDefault(Util.GetMouseCollider(layerMaskArrow), nullMove);
         if (selectedWallMove != nullMove) {
+            undo = new MoveWall(selectedWall, selectedWall.coor);
             maze.MoveWall(selectedWall, selectedWallMove);
-            undo = new Tuple<Wall, Int2>(selectedWall, selectedWallMove);
             maze.gel.CalculatePath();
             selectedWall = null;
             DestroyAllArrows();

@@ -14,7 +14,7 @@ public class CameraScript : MonoBehaviour
     void Update() {
         // Input.
         distance *= Mathf.Pow(scrollSensitivity, Input.mouseScrollDelta.y);
-        distance = Mathf.Clamp(distance, 4, 10);
+        distance = Mathf.Clamp(distance, 4, 7.5f);
         if (Input.GetMouseButton(1)) {
             horizontalAngle -= Input.GetAxis("Mouse X") * sensitivity;
             verticalAngle -= Input.GetAxis("Mouse Y") * sensitivity;

@@ -18,12 +18,13 @@ public class GelScript : MonoBehaviour {
     void Update() {
         float positionSmoothing = firstUpdate ? 0 : .0001f;
         float rotationSmoothing = firstUpdate ? 0 : .00015f;
+        float adjustedDeltaTime = Time.deltaTime * Mathf.Pow(gel.maze.tilesPerMove, .33f);
         firstUpdate = false;
         float targetX = gel.coor.x - gel.maze.dimensions.x / 2f + .5f;
         float targetZ = -gel.coor.y + gel.maze.dimensions.y / 2f - .5f;
         Vector2 localPosition2 = new Vector2(transform.localPosition.x, transform.localPosition.z);
         Vector2 targetPosition2 = new Vector2(targetX, targetZ);
-        localPosition2 = Util.Damp(localPosition2, targetPosition2, positionSmoothing, Time.deltaTime);
+        localPosition2 = Util.Damp(localPosition2, targetPosition2, positionSmoothing, adjustedDeltaTime);
         float distance2 = Vector2.Distance(localPosition2, targetPosition2);
         float height = 1 - Mathf.Abs(2 * (distance2 - .5f));
         float scale = 1 + .05f * Mathf.Sin((1 - Mathf.Pow(distance2, .4f)) * 2 * Mathf.PI);
@@ -33,7 +34,7 @@ public class GelScript : MonoBehaviour {
         if (distance2 < .1f) {
             UpdateTargetRotation();
         }
-        transform.localRotation = Util.Damp(transform.localRotation, targetRotation, rotationSmoothing, Time.deltaTime);
+        transform.localRotation = Util.Damp(transform.localRotation, targetRotation, rotationSmoothing, adjustedDeltaTime);
         doneAnimating = distance2 < .01f && Quaternion.Angle(transform.localRotation, targetRotation) < 5;
     }
     void UpdateTargetRotation() {
