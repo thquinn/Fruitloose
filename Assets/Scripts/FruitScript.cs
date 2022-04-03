@@ -14,7 +14,7 @@ public class FruitScript : MonoBehaviour
         }
         float y = .25f + .1f * Mathf.Sin(Time.time);
         meshRoot.transform.localPosition = new Vector3(0, y, 0);
-        meshRoot.transform.Rotate(0, .1f, 0);
+        meshRoot.transform.localRotation = Quaternion.Euler(0, Time.time * 30, 0);
     }
 
     public void Eat() {

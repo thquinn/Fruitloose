@@ -9,8 +9,8 @@ public class TerrainScript : MonoBehaviour
     public LayerMask layerMaskTerrain;
 
     public void SpawnGrass(float mazeWidth, float mazeHeight) {
-        mazeWidth += .2f;
-        mazeHeight += .2f;
+        mazeWidth += .4f;
+        mazeHeight += .4f;
         Rect mazeBounds = new Rect(-mazeWidth / 2, -mazeHeight / 2, mazeWidth, mazeHeight);
         float rayY = terrainCollider.bounds.max.y;
         for (int i = 0; i < 1000; i++) {
