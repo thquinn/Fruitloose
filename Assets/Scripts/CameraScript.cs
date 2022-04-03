@@ -1,24 +1,32 @@
+using Assets.Code;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    public Vector3 lookAt;
     public float distance;
     public float sensitivity;
     public float scrollSensitivity;
     float horizontalAngle = Mathf.PI * 2 / 3;
     float verticalAngle = Mathf.PI / 6;
 
+    public MazeScript mazeScript;
+    Vector3 lookAt = new Vector3(0, 6, 0);
+
     void Update() {
-        // Input.
-        distance *= Mathf.Pow(scrollSensitivity, Input.mouseScrollDelta.y);
-        distance = Mathf.Clamp(distance, 4, 7.5f);
-        if (Input.GetMouseButton(1)) {
-            horizontalAngle -= Input.GetAxis("Mouse X") * sensitivity;
-            verticalAngle -= Input.GetAxis("Mouse Y") * sensitivity;
-            verticalAngle = Mathf.Clamp(verticalAngle, Mathf.PI * .1f, Mathf.PI * .3f);
+        if (mazeScript != null) {
+            // Input.
+            distance *= Mathf.Pow(scrollSensitivity, Input.mouseScrollDelta.y);
+            distance = Mathf.Clamp(distance, 4, 7.5f);
+            if (Input.GetMouseButton(1)) {
+                horizontalAngle -= Input.GetAxis("Mouse X") * sensitivity;
+                verticalAngle -= Input.GetAxis("Mouse Y") * sensitivity;
+                verticalAngle = Mathf.Clamp(verticalAngle, Mathf.PI * .1f, Mathf.PI * .3f);
+            }
+            lookAt = Util.Damp(lookAt, new Vector3(0, -1, 0), .05f, Time.deltaTime);
+        } else {
+            lookAt = Util.Damp(lookAt, new Vector3(0, 6, 0), .05f, Time.deltaTime);
         }
 
         // Set position.

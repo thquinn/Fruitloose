@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6261223299968224319
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6261223299968224317}
+  - component: {fileID: 6261223299968224318}
+  m_Layer: 0
+  m_Name: Maze
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6261223299968224317
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6261223299968224319}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6261223299968224318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6261223299968224319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7c7eae1bcbc95d4ca87eb76ece5b9ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabTerrain: {fileID: 1070210163809740885, guid: d7d160012a528544589e9cb0f891b5de, type: 3}
+  prefabTile: {fileID: 2720004809169432413, guid: fc5d79e379fd45e48b9e58ff4d4a8b45, type: 3}
+  prefabWall: {fileID: 784605336085488746, guid: 58e095b28c6de87428284bcfb37fc237, type: 3}
+  prefabGel: {fileID: 5141700808596514395, guid: b07480829a3c4444690a3307a4336257, type: 3}
+  prefabArrow: {fileID: 9192465553944721512, guid: d2ac399efb3406d4bbab7f0cd091c360, type: 3}
+  prefabGelPath: {fileID: 2673509007647761002, guid: c2b4c22eb497e284594f2b908596856f, type: 3}
+  prefabFruit: {fileID: 9037760580817881362, guid: ea53fc99817d65f4c8d347383c81f08f, type: 3}
+  layerMaskWall:
+    serializedVersion: 2
+    m_Bits: 128
+  layerMaskArrow:
+    serializedVersion: 2
+    m_Bits: 256

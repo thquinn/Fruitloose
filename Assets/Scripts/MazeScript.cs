@@ -16,10 +16,11 @@ public class MazeScript : MonoBehaviour {
     Dictionary<Collider, Int2> wallMoveColliders;
     public Move undo;
     bool waitForAnimation;
+    public TerrainScript terrainScript;
 
     void Start() {
-        maze = new Maze(new Int2(5, 5));
-        TerrainScript terrainScript = Instantiate(prefabTerrain).GetComponent<TerrainScript>();
+        maze = new Maze(new Int2(6, 6));
+        terrainScript = Instantiate(prefabTerrain).GetComponent<TerrainScript>();
         terrainScript.Init(maze);
         float xOffset = -maze.dimensions.x / 2f + .5f;
         float yOffset = -maze.dimensions.y / 2f + .5f;

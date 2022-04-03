@@ -10,7 +10,7 @@ public class TerrainScript : MonoBehaviour
     public LayerMask layerMaskTerrain;
 
     public void Init(Maze maze) {
-        //transform.localScale = new Vector3(maze.entities.GetLength(0) / 5f, 0, maze.entities.GetLength(1) / 5f);
+        transform.localScale = Vector3.Scale(transform.localScale, new Vector3(maze.entities.GetLength(0) / 5f, 1, maze.entities.GetLength(1) / 5f));
         float mazeWidth = maze.entities.GetLength(0) + .4f;
         float mazeHeight = maze.entities.GetLength(1) + .4f;
         Rect mazeBounds = new Rect(-mazeWidth / 2, -mazeHeight / 2, mazeWidth, mazeHeight);

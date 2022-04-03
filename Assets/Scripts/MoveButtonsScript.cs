@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class MoveButtonsScript : MonoBehaviour
 {
     public MazeScript mazeScript;
-    public RectTransform undoTransform;
+    public RectTransform rectTransform, undoTransform;
     public Image imageCheck;
     public TextMeshProUGUI tmpWarning;
     public CanvasGroup canvasGroupWarning;
@@ -16,15 +16,27 @@ public class MoveButtonsScript : MonoBehaviour
     Color checkColor;
 
     void Start() {
-        Vector2 anchoredPosition = undoTransform.anchoredPosition;
+        Vector2 anchoredPosition = rectTransform.anchoredPosition;
+        anchoredPosition.y = -120;
+        rectTransform.anchoredPosition = anchoredPosition;
+        anchoredPosition = undoTransform.anchoredPosition;
         anchoredPosition.y = -120;
         undoTransform.anchoredPosition = anchoredPosition;
         checkColor = imageCheck.color;
     }
 
     void Update() {
-        Vector2 anchoredPosition = undoTransform.anchoredPosition;
-        float targetY = mazeScript.undo == null ? -120 : 0;
+        // Overall transform.
+        Vector2 anchoredPosition = rectTransform.anchoredPosition;
+        float targetY = mazeScript == null ? -120 : 20;
+        anchoredPosition.y = Util.Damp(anchoredPosition.y, targetY, .0001f, Time.deltaTime);
+        rectTransform.anchoredPosition = anchoredPosition;
+        if (mazeScript == null) {
+            return;
+        }
+        // Undo transform.
+        anchoredPosition = undoTransform.anchoredPosition;
+        targetY = mazeScript.undo == null ? -120 : 0;
         anchoredPosition.y = Util.Damp(anchoredPosition.y, targetY, .0001f, Time.deltaTime);
         undoTransform.anchoredPosition = anchoredPosition;
 

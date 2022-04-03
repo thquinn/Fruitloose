@@ -13,6 +13,10 @@ public class SFXScript : MonoBehaviour
     void Start()
     {
         instance = this;
+        foreach (AudioSource move in moves) {
+            move.pitch *= 1.25f;
+        }
+        moves.Shuffle();
         moveIndex = 0;
     }
 
