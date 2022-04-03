@@ -157,6 +157,7 @@ MonoBehaviour:
   prefabGel: {fileID: 5141700808596514395, guid: b07480829a3c4444690a3307a4336257, type: 3}
   prefabArrow: {fileID: 9192465553944721512, guid: d2ac399efb3406d4bbab7f0cd091c360, type: 3}
   prefabGelPath: {fileID: 2673509007647761002, guid: c2b4c22eb497e284594f2b908596856f, type: 3}
+  prefabFruit: {fileID: 9037760580817881362, guid: ea53fc99817d65f4c8d347383c81f08f, type: 3}
   layerMaskWall:
     serializedVersion: 2
     m_Bits: 128
@@ -367,6 +368,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lookAt: {x: 0, y: -1, z: 0}
-  distance: 5
+  distance: 6
   sensitivity: 0.1
   scrollSensitivity: 0.9

@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MazeScript : MonoBehaviour {
-    public GameObject prefabTile, prefabWall, prefabGel, prefabArrow, prefabGelPath;
+    public GameObject prefabTile, prefabWall, prefabGel, prefabArrow, prefabGelPath, prefabFruit;
     public LayerMask layerMaskWall, layerMaskArrow;
 
     Maze maze;
     GelScript gelScript;
+    FruitScript fruitScript;
     Dictionary<Collider, Wall> wallColliders;
     Wall selectedWall;
     Dictionary<Collider, Int2> wallMoveColliders;
@@ -31,6 +32,9 @@ public class MazeScript : MonoBehaviour {
         gelScript = Instantiate(prefabGel, transform).GetComponent<GelScript>();
         gelScript.Set(maze.gel);
         Instantiate(prefabGelPath, transform).GetComponent<GelPathScript>().Set(maze.gel);
+        // Fruit.
+        fruitScript = Instantiate(prefabFruit, transform).GetComponent<FruitScript>();
+        fruitScript.transform.localPosition = new Vector3(maze.exit.x + xOffset, 0, -maze.exit.y - yOffset);
         // Walls.
         wallColliders = new Dictionary<Collider, Wall>();
         for (int x = 0; x < maze.wallsRight.GetLength(0); x++) {
@@ -64,6 +68,10 @@ public class MazeScript : MonoBehaviour {
         if (waitForAnimation) {
             if (gelScript.DoneAnimating() && maze.MoveGel()) {
                 waitForAnimation = false;
+            }
+            if (fruitScript != null && maze.gel.coor == maze.exit) {
+                fruitScript.Eat();
+                fruitScript = null;
             }
             return;
         }

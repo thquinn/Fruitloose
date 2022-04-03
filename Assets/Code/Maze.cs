@@ -94,6 +94,10 @@ namespace Assets.Code {
         public bool MoveGel() {
             MoveEntity(gel, gel.path[0]);
             gel.CalculatePath();
+            if (gel.path.Count == 0) {
+                tilesLeftThisMove = 0;
+                return true;
+            }
             tilesLeftThisMove--;
             if (tilesLeftThisMove == 0) {
                 tilesPerMove++;

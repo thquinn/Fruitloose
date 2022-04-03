@@ -26,6 +26,8 @@ public class GelScript : MonoBehaviour {
         localPosition2 = Vector2.Lerp(localPosition2, targetPosition2, positionT);
         float distance2 = Vector2.Distance(localPosition2, targetPosition2);
         float height = 1 - Mathf.Abs(2 * (distance2 - .5f));
+        float scale = 1 + .1f * Mathf.Sin((1 - Mathf.Pow(distance2, .4f)) * 2 * Mathf.PI);
+        transform.localScale = new Vector3(1, scale, 1);
         height *= .2f;
         transform.localPosition = new Vector3(localPosition2.x, height, localPosition2.y);
         if (distance2 < .1f) {
