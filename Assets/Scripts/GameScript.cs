@@ -6,11 +6,12 @@ using UnityEngine;
 public class GameScript : MonoBehaviour
 {
     public Transform canvasTransform;
-    public GameObject prefabTitle, prefabMaze, prefabScorePopup;
+    public GameObject prefabTitle, prefabMaze, prefabScorePopup, prefabFinalPopup;
     public CameraScript cameraScript;
     public MoveButtonsScript moveButtonsScript;
     public ScoreBarScript scoreBarScript;
     public ScorePopupScript scorePopupScript;
+    public FinalPopupScript finalPopupScript;
 
     TitleScript titleScript;
     MazeScript mazeScript;
@@ -18,8 +19,18 @@ public class GameScript : MonoBehaviour
     int levelIndex;
     int totalScore;
 
+    Maze[] mazes;
+
     void Start() {
         titleScript = Instantiate(prefabTitle, canvasTransform).GetComponent<TitleScript>();
+        mazes = new Maze[] {
+            new Maze(new Int2(5, 5)),
+            new Maze(new Int2(5, 5)),
+            new Maze(new Int2(6, 6)),
+            new Maze(new Int2(6, 6)),
+            new Maze(new Int2(7, 7)),
+            new Maze(new Int2(7, 7)),
+        };
     }
 
     void Update() {
@@ -31,9 +42,14 @@ public class GameScript : MonoBehaviour
         if (!detaching && mazeScript != null && mazeScript.maze != null && mazeScript.maze.gel.coor == mazeScript.maze.exit) {
             totalScore += mazeScript.maze.totalTiles - mazeScript.maze.par;
             DetachLevel();
-            scorePopupScript = Instantiate(prefabScorePopup, canvasTransform).GetComponent<ScorePopupScript>();
             levelIndex++;
-            scorePopupScript.SetText(levelIndex, 6, mazeScript.maze.par, mazeScript.maze.totalTiles);
+            if (levelIndex == mazes.Length) {
+                finalPopupScript = Instantiate(prefabFinalPopup, canvasTransform).GetComponent<FinalPopupScript>();
+                finalPopupScript.SetText(totalScore);
+            } else {
+                scorePopupScript = Instantiate(prefabScorePopup, canvasTransform).GetComponent<ScorePopupScript>();
+                scorePopupScript.SetText(levelIndex, mazes.Length, mazeScript.maze.par, mazeScript.maze.totalTiles);
+            }
         }
         if (!detaching && scorePopupScript != null && Input.GetMouseButtonDown(0)) {
             scorePopupScript.Dismiss();
@@ -44,7 +60,7 @@ public class GameScript : MonoBehaviour
 
     void StartLevel() {
         mazeScript = Instantiate(prefabMaze).GetComponent<MazeScript>();
-        mazeScript.Init(new Maze(new Int2(6, 6)));
+        mazeScript.Init(mazes[levelIndex]);
         cameraScript.mazeScript = mazeScript;
         moveButtonsScript.mazeScript = mazeScript;
         scoreBarScript.mazeScript = mazeScript;

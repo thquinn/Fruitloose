@@ -22,7 +22,7 @@ public class CameraScript : MonoBehaviour
             if (Input.GetMouseButton(1)) {
                 horizontalAngle -= Input.GetAxis("Mouse X") * sensitivity;
                 verticalAngle -= Input.GetAxis("Mouse Y") * sensitivity;
-                verticalAngle = Mathf.Clamp(verticalAngle, Mathf.PI * .1f, Mathf.PI * .3f);
+                verticalAngle = Mathf.Clamp(verticalAngle, Mathf.PI * .05f, Mathf.PI * .3f);
             }
             lookAt = Util.Damp(lookAt, new Vector3(0, -1, 0), .05f, Time.deltaTime);
         } else {
