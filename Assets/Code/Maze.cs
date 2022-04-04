@@ -15,6 +15,7 @@ namespace Assets.Code {
         public int tilesPerMove;
         public int tilesLeftThisMove;
         public int totalTiles;
+        public int par;
 
         public Maze(Int2 dimensions) {
             this.dimensions = dimensions;
@@ -27,6 +28,7 @@ namespace Assets.Code {
             gel = new Gel(this, new Int2(0, 0));
             tilesPerMove = 1;
             tilesLeftThisMove = tilesPerMove;
+            par = gel.path.Count;
         }
 
         public void RandomWalls() {

@@ -7,7 +7,7 @@ public class SFXScript : MonoBehaviour
 {
     public static SFXScript instance;
     public AudioSource[] moves;
-    public AudioSource chomp;
+    public AudioSource chomp, buttonDown, buttonUp, slide;
     int moveIndex;
 
     void Start()
@@ -32,5 +32,14 @@ public class SFXScript : MonoBehaviour
     }
     public void Chomp() {
         chomp.PlayOneShot(chomp.clip);
+    }
+    public void ButtonDown() {
+        buttonDown.PlayOneShot(buttonDown.clip);
+    }
+    public void ButtonUp() {
+        buttonUp.PlayOneShot(buttonUp.clip);
+    }
+    public void Slide() {
+        slide.PlayOneShot(slide.clip);
     }
 }

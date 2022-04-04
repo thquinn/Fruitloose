@@ -18,8 +18,8 @@ public class MazeScript : MonoBehaviour {
     bool waitForAnimation;
     public TerrainScript terrainScript;
 
-    void Start() {
-        maze = new Maze(new Int2(6, 6));
+    public void Init(Maze maze) {
+        this.maze = maze;
         terrainScript = Instantiate(prefabTerrain).GetComponent<TerrainScript>();
         terrainScript.Init(maze);
         float xOffset = -maze.dimensions.x / 2f + .5f;
@@ -88,6 +88,7 @@ public class MazeScript : MonoBehaviour {
         }
         undo.Reverse(maze);
         maze.gel.CalculatePath();
+        SFXScript.instance.Slide();
         undo = null;
     }
 
@@ -123,6 +124,7 @@ public class MazeScript : MonoBehaviour {
         if (selectedWallMove != nullMove) {
             undo = new MoveWall(selectedWall, selectedWall.coor);
             maze.MoveWall(selectedWall, selectedWallMove);
+            SFXScript.instance.Slide();
             maze.gel.CalculatePath();
             selectedWall = null;
             DestroyAllArrows();

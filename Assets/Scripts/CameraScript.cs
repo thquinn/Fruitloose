@@ -26,6 +26,8 @@ public class CameraScript : MonoBehaviour
             }
             lookAt = Util.Damp(lookAt, new Vector3(0, -1, 0), .05f, Time.deltaTime);
         } else {
+            distance = Util.Damp(distance, 6, .1f, Time.deltaTime);
+            verticalAngle = Util.Damp(verticalAngle, Mathf.PI * .133f, .1f, Time.deltaTime);
             lookAt = Util.Damp(lookAt, new Vector3(0, 6, 0), .05f, Time.deltaTime);
         }
 

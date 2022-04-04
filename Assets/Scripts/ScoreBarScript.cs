@@ -10,8 +10,6 @@ public class ScoreBarScript : MonoBehaviour
     public RectTransform rectTransform;
     public TextMeshProUGUI tmpTarget, tmpScore;
 
-    bool mazeWasNull = true;
-
     void Start() {
         Vector3 anchoredPosition = rectTransform.anchoredPosition;
         anchoredPosition.y = 120;
@@ -24,10 +22,7 @@ public class ScoreBarScript : MonoBehaviour
         anchoredPosition.y = Util.Damp(anchoredPosition.y, targetY, .0001f, Time.deltaTime);
         rectTransform.anchoredPosition = anchoredPosition;
         if (mazeScript != null && mazeScript.maze != null) {
-            if (mazeWasNull) {
-                tmpTarget.text = mazeScript.maze.gel.path.Count.ToString();
-                mazeWasNull = false;
-            }
+                tmpTarget.text = mazeScript.maze.par.ToString();
             tmpScore.text = mazeScript.maze.totalTiles.ToString();
         }
     }
