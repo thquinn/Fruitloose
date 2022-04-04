@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2072994909813350169}
   - component: {fileID: 2072994909813350171}
   - component: {fileID: 2072994909813350168}
+  - component: {fileID: 7824853703705817948}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -134,6 +135,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!225 &7824853703705817948
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072994909813350174}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &2072994910349796063
 GameObject:
   m_ObjectHideFlags: 0
@@ -184,6 +197,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57fd8d91311e03142815451beb4180af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groupLogo: {fileID: 2500120258300591051}
+  groupPrompt: {fileID: 7824853703705817948}
 --- !u!1 &2072994911072492564
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +210,7 @@ GameObject:
   - component: {fileID: 2072994911072492567}
   - component: {fileID: 2072994911072492561}
   - component: {fileID: 2072994911072492566}
+  - component: {fileID: 2500120258300591051}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -259,3 +275,15 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &2500120258300591051
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072994911072492564}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

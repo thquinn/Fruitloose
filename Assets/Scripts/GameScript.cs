@@ -24,12 +24,12 @@ public class GameScript : MonoBehaviour
     void Start() {
         titleScript = Instantiate(prefabTitle, canvasTransform).GetComponent<TitleScript>();
         mazes = new Maze[] {
-            new Maze(new Int2(5, 5)),
-            new Maze(new Int2(5, 5)),
-            new Maze(new Int2(6, 6)),
-            new Maze(new Int2(6, 6)),
-            new Maze(new Int2(7, 7)),
-            new Maze(new Int2(7, 7)),
+            new Maze(5, 5, false),
+            new Maze(5, 5, false),
+            new Maze(6, 6, false),
+            new Maze(6, 6, true),
+            new Maze(7, 7, false),
+            new Maze(7, 7, true),
         };
     }
 

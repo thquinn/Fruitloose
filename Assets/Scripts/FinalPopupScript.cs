@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FinalPopupScript : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class FinalPopupScript : MonoBehaviour
         Vector2 anchoredPosition = rectTransform.anchoredPosition;
         anchoredPosition.y = Util.Damp(anchoredPosition.y, 0, .0001f, Time.deltaTime);
         rectTransform.anchoredPosition = anchoredPosition;
+
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
     public void SetText(int score) {

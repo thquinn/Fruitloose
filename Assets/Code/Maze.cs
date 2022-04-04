@@ -17,18 +17,27 @@ namespace Assets.Code {
         public int totalTiles;
         public int par;
 
-        public Maze(Int2 dimensions) {
-            this.dimensions = dimensions;
+        public Maze(int width, int height, bool goldenFruit) {
+            dimensions = new Int2(width, height);
             entities = new Entity[dimensions.x, dimensions.y];
             wallsRight = new Wall[dimensions.x - 1, dimensions.y];
             wallsBelow = new Wall[dimensions.x, dimensions.y - 1];
             RandomWalls();
             exit = new Int2(dimensions.x - 1, dimensions.y - 1);
-            new GoldenFruit(this, new Int2(2, 2));
+            GoldenFruit gfEntity = null;
+            if (goldenFruit) {
+                int x = UnityEngine.Random.Range(1, dimensions.x - 1);
+                int y = UnityEngine.Random.Range(1, dimensions.y - 1);
+                gfEntity = new GoldenFruit(this, new Int2(x, y));
+            }
             gel = new Gel(this, new Int2(0, 0));
             tilesPerMove = 1;
             tilesLeftThisMove = tilesPerMove;
-            par = gel.path.Count;
+            if (goldenFruit) {
+                par = GetPathLength(gel.coor, gfEntity.coor) + GetPathLength(gfEntity.coor, exit);
+            } else {
+                par = gel.path.Count;
+            }
         }
 
         public void RandomWalls() {
@@ -163,6 +172,33 @@ namespace Assets.Code {
             walls[wall.coor.x, wall.coor.y] = null;
             walls[coor.x, coor.y] = wall;
             wall.coor = coor;
+        }
+
+        public int GetPathLength(Int2 start, Int2 end) {
+            Dictionary<Int2, Int2> parents = new Dictionary<Int2, Int2>();
+            parents.Add(start, new Int2(-1, -1));
+            Queue<Int2> queue = new Queue<Int2>();
+            queue.Enqueue(start);
+            while (queue.Count > 0) {
+                Int2 current = queue.Dequeue();
+                foreach (Int2 neighbor in GetNeighbors(current)) {
+                    if (parents.ContainsKey(neighbor)) {
+                        continue;
+                    }
+                    parents[neighbor] = current;
+                    queue.Enqueue(neighbor);
+                }
+            }
+            if (!parents.ContainsKey(end)) {
+                return -1;
+            }
+            int pathLength = 0;
+            Int2 c = end;
+            while (c != start) {
+                pathLength++;
+                c = parents[c];
+            }
+            return pathLength;
         }
     }
 }

@@ -51,7 +51,7 @@ public class MoveButtonsScript : MonoBehaviour
     }
 
     public void ConfirmMove() {
-        if (mazeScript.maze.gel.path.Count == 0) {
+        if (mazeScript == null || mazeScript.maze == null || mazeScript.maze.gel.path.Count == 0) {
             return;
         }
         mazeScript.ConfirmMove();

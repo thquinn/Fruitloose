@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class TitleScript : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public CanvasGroup groupLogo, groupPrompt;
+    float time;
+
     void Start()
     {
-        
+        groupLogo.alpha = 0;
+        groupPrompt.alpha = 0;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        time += Time.deltaTime;
+        if (time > 1) {
+            groupLogo.alpha += Time.deltaTime;
+        }
+        if (time > 2) {
+            groupPrompt.alpha += Time.deltaTime;
+        }
     }
 
     public void Dismiss() {
