@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameScript : MonoBehaviour
 {
     public Transform canvasTransform;
-    public GameObject prefabTitle, prefabMaze, prefabScorePopup, prefabFinalPopup;
+    public GameObject prefabTitle, prefabMaze, prefabScorePopup, prefabFinalPopup, prefabTutorial;
     public CameraScript cameraScript;
     public MoveButtonsScript moveButtonsScript;
     public ScoreBarScript scoreBarScript;
@@ -41,15 +41,8 @@ public class GameScript : MonoBehaviour
         }
         if (!detaching && mazeScript != null && mazeScript.maze != null && mazeScript.maze.gel.coor == mazeScript.maze.exit) {
             totalScore += mazeScript.maze.totalTiles - mazeScript.maze.par;
-            DetachLevel();
-            levelIndex++;
-            if (levelIndex == mazes.Length) {
-                finalPopupScript = Instantiate(prefabFinalPopup, canvasTransform).GetComponent<FinalPopupScript>();
-                finalPopupScript.SetText(totalScore);
-            } else {
-                scorePopupScript = Instantiate(prefabScorePopup, canvasTransform).GetComponent<ScorePopupScript>();
-                scorePopupScript.SetText(levelIndex, mazes.Length, mazeScript.maze.par, mazeScript.maze.totalTiles);
-            }
+            detaching = true;
+            Invoke("DetachLevel", 1);
         }
         if (!detaching && scorePopupScript != null && Input.GetMouseButtonDown(0)) {
             scorePopupScript.Dismiss();
@@ -64,13 +57,23 @@ public class GameScript : MonoBehaviour
         cameraScript.mazeScript = mazeScript;
         moveButtonsScript.mazeScript = mazeScript;
         scoreBarScript.mazeScript = mazeScript;
+        if (levelIndex == 0) {
+            Instantiate(prefabTutorial, canvasTransform);
+        }
     }
     void DetachLevel() {
         cameraScript.mazeScript = null;
         moveButtonsScript.mazeScript = null;
         scoreBarScript.mazeScript = null;
-        detaching = true;
         Invoke("DestroyLevel", 1);
+        levelIndex++;
+        if (levelIndex == mazes.Length) {
+            finalPopupScript = Instantiate(prefabFinalPopup, canvasTransform).GetComponent<FinalPopupScript>();
+            finalPopupScript.SetText(totalScore);
+        } else {
+            scorePopupScript = Instantiate(prefabScorePopup, canvasTransform).GetComponent<ScorePopupScript>();
+            scorePopupScript.SetText(levelIndex, mazes.Length, mazeScript.maze.par, mazeScript.maze.totalTiles);
+        }
     }
     void DestroyLevel() {
         Destroy(mazeScript.terrainScript.gameObject);

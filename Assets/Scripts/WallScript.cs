@@ -17,11 +17,11 @@ public class WallScript : MonoBehaviour
     }
 
     void Update() {
-        float t = firstUpdate ? 1 : .05f;
+        float smoothing = firstUpdate ? 0 : .001f;
         firstUpdate = false;
         float targetX = wall.coor.x - wall.maze.dimensions.x / 2f + (wall.horizontal ? .5f : 1f);
         float targetZ = -wall.coor.y + wall.maze.dimensions.y / 2f - (wall.horizontal ? 1f : .5f);
         Vector3 targetPosition = new Vector3(targetX, 0, targetZ);
-        transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, t);
+        transform.localPosition = Util.Damp(transform.localPosition, targetPosition, smoothing, Time.deltaTime);
     }
 }

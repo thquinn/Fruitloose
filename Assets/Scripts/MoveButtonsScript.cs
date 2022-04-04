@@ -26,6 +26,10 @@ public class MoveButtonsScript : MonoBehaviour
     }
 
     void Update() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            ConfirmMove();
+        }
+
         // Overall transform.
         Vector2 anchoredPosition = rectTransform.anchoredPosition;
         float targetY = mazeScript == null ? -120 : 20;
@@ -40,7 +44,7 @@ public class MoveButtonsScript : MonoBehaviour
         anchoredPosition.y = Util.Damp(anchoredPosition.y, targetY, .0001f, Time.deltaTime);
         undoTransform.anchoredPosition = anchoredPosition;
 
-        if (mazeScript.undo != null && mazeScript.maze.gel.path.Count == 0) {
+        if (mazeScript.maze.gel.coor != mazeScript.maze.exit && mazeScript.maze.gel.path.Count == 0) {
             imageCheck.color = new Color(.75f, .75f, .75f);
             tmpWarning.text = "You need to leave a path open.";
             canvasGroupWarning.alpha = Util.Damp(canvasGroupWarning.alpha, 1, .0001f, Time.deltaTime);

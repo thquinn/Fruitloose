@@ -9,6 +9,14 @@ public class MusicScript : MonoBehaviour
 
     bool stopped;
 
+    void Start() {
+        if (GameObject.FindGameObjectsWithTag("Music").Length > 1) {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(this);
+    }
+
     // Update is called once per frame
     void Update()
     {
